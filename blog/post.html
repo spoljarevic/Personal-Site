@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blog Post | Luca Matteo Špoljarević</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body data-page="blog-post" data-post-slug="">
+  <nav class="navbar">
+    <div class="nav-inner">
+      <a href="../index.html" class="nav-link">Home</a>
+      <a href="https://codeberg.org/Spoljarevic/Blog" class="nav-link" target="_blank" rel="noopener">Blog</a>
+      <a href="../about.html" class="nav-link">About</a>
+      <a href="../now.html" class="nav-link">Now</a>
+    </div>
+  </nav>
+
+  <main>
+    <div class="container">
+      <article class="blog-post">
+        <h1 id="blog-post-title">Loading…</h1>
+        <div class="meta" id="blog-post-meta"></div>
+        <div id="blog-post-content" class="blog-post-content">
+          <div class="git-loading">Loading post…</div>
+        </div>
+      </article>
+    </div>
+  </main>
+
+  <footer>
+    <p><a href="index.html">← Back to Blog</a> · © 2026 Luca Matteo Špoljarević</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="../config.js"></script>
+  <script src="../js/main.js"></script>
+  <script>
+    (function() {
+      const m = window.location.pathname.match(/\/blog\/(.+)$/);
+      if (m) document.body.dataset.postSlug = decodeURIComponent(m[1]);
+    })();
+  </script>
+</body>
+</html>

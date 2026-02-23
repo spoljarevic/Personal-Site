@@ -1,0 +1,596 @@
+/* ========================================
+   Spoljarevic Personal Site
+   Dark blue gradient theme
+   ======================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --bg-dark: #0a0e1a;
+  --bg-mid: #0f1629;
+  --bg-card: #151d2e;
+  --accent-blue: #3b82f6;
+  --accent-cyan: #22d3ee;
+  --accent-purple: #8b5cf6;
+  --text-primary: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --border: rgba(59, 130, 246, 0.2);
+  --gradient-1: linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #0f1629 100%);
+  --gradient-2: linear-gradient(180deg, transparent 0%, var(--bg-dark) 100%);
+  --shadow-glow: 0 0 40px rgba(59, 130, 246, 0.15);
+  --font-sans: 'Outfit', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-sans);
+  background: var(--bg-dark);
+  color: var(--text-primary);
+  line-height: 1.6;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Background gradient */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: var(--gradient-1);
+  z-index: -2;
+  pointer-events: none;
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(ellipse 80% 50% at 50% 0%, rgba(59, 130, 246, 0.12) 0%, transparent 50%);
+  z-index: -1;
+  pointer-events: none;
+}
+
+a {
+  color: var(--accent-cyan);
+  text-decoration: none;
+  transition: color 0.2s, opacity 0.2s;
+}
+
+a:hover {
+  color: var(--accent-blue);
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* ========================================
+   Navbar - Animated centered dropdown
+   ======================================== */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  padding: 1rem 1.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(10, 14, 26, 0.8);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.navbar.hidden {
+  transform: translateY(-100%);
+  opacity: 0;
+}
+
+.nav-inner {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.nav-item {
+  position: relative;
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.6rem 1rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+  font-size: 0.95rem;
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+
+.nav-link:hover,
+.nav-link.active {
+  color: var(--text-primary);
+  background: rgba(59, 130, 246, 0.15);
+}
+
+.nav-item[data-dropdown] .nav-link::after {
+  content: '▾';
+  font-size: 0.7em;
+  opacity: 0.7;
+  transition: transform 0.2s;
+}
+
+.nav-item.open .nav-link::after {
+  transform: rotate(180deg);
+}
+
+/* Dropdown */
+.nav-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%) translateY(8px);
+  min-width: 180px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 0.5rem;
+  opacity: 0;
+  visibility: hidden;
+  box-shadow: var(--shadow-glow);
+  transition: opacity 0.2s, transform 0.2s, visibility 0.2s;
+}
+
+.nav-item.open .nav-dropdown {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(4px);
+}
+
+.nav-dropdown a {
+  display: block;
+  padding: 0.5rem 0.75rem;
+  color: var(--text-secondary);
+  border-radius: 8px;
+  font-size: 0.9rem;
+}
+
+.nav-dropdown a:hover {
+  color: var(--text-primary);
+  background: rgba(59, 130, 246, 0.2);
+}
+
+/* ========================================
+   Main layout
+   ======================================== */
+main {
+  padding-top: 80px;
+  min-height: 100vh;
+}
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+/* ========================================
+   Hero - Terminal style
+   ======================================== */
+.hero {
+  padding: 4rem 0 3rem;
+  text-align: center;
+}
+
+.hero-terminal {
+  background: rgba(15, 22, 41, 0.9);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: var(--shadow-glow);
+  max-width: 560px;
+  margin: 0 auto 2rem;
+  text-align: left;
+}
+
+.terminal-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: rgba(0, 0, 0, 0.3);
+  border-bottom: 1px solid var(--border);
+}
+
+.terminal-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.terminal-dot:nth-child(1) { background: #ef4444; }
+.terminal-dot:nth-child(2) { background: #eab308; }
+.terminal-dot:nth-child(3) { background: #22c55e; }
+
+.terminal-body {
+  padding: 1.25rem 1.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  line-height: 1.7;
+}
+
+.terminal-line {
+  margin-bottom: 0.25rem;
+}
+
+.terminal-line .prompt {
+  color: var(--accent-cyan);
+}
+
+.terminal-line .command {
+  color: var(--text-primary);
+}
+
+.terminal-line .output {
+  color: var(--text-secondary);
+  padding-left: 1rem;
+}
+
+.terminal-line .highlight {
+  color: var(--accent-cyan);
+  font-weight: 500;
+}
+
+.terminal-cursor {
+  display: inline-block;
+  width: 8px;
+  height: 1.2em;
+  background: var(--accent-cyan);
+  margin-left: 2px;
+  vertical-align: text-bottom;
+  animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
+}
+
+/* Hero content below terminal */
+.hero-avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--border);
+  margin: 0 auto 1rem;
+  box-shadow: var(--shadow-glow);
+}
+
+.hero h1 {
+  font-size: 1.75rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.hero-subtitle {
+  color: var(--text-secondary);
+  font-size: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+/* ========================================
+   Links grid
+   ======================================== */
+.links-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+  margin-bottom: 3rem;
+  max-width: 340px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.link-card {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  transition: all 0.2s;
+}
+
+.link-card:hover {
+  border-color: var(--accent-blue);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-glow);
+}
+
+.link-card .icon {
+  font-size: 1.25rem;
+}
+
+/* ========================================
+   Sections
+   ======================================== */
+.section {
+  padding: 2rem 0;
+}
+
+.section-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: var(--text-primary);
+}
+
+/* Projects */
+.projects-grid {
+  display: grid;
+  gap: 1rem;
+}
+
+.project-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  transition: all 0.2s;
+}
+
+.project-card:hover {
+  border-color: var(--accent-blue);
+  box-shadow: var(--shadow-glow);
+}
+
+.project-card a {
+  font-weight: 500;
+}
+
+.project-desc {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin-top: 0.25rem;
+}
+
+/* Git Activity */
+.git-activity {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.git-branch-tabs {
+  display: flex;
+  border-bottom: 1px solid var(--border);
+}
+
+.git-branch-tab {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.git-branch-tab:hover,
+.git-branch-tab.active {
+  color: var(--text-primary);
+  background: rgba(59, 130, 246, 0.15);
+}
+
+.git-commits-list {
+  max-height: 280px;
+  overflow-y: auto;
+}
+
+.git-commit {
+  display: flex;
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.9rem;
+}
+
+.git-commit:last-child {
+  border-bottom: none;
+}
+
+.git-commit-msg {
+  flex: 1;
+  color: var(--text-primary);
+}
+
+.git-commit-date {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+
+.git-loading,
+.git-error {
+  padding: 1.5rem;
+  text-align: center;
+  color: var(--text-secondary);
+}
+
+/* ========================================
+   Page layouts (About, Blog, Now)
+   ======================================== */
+.page-header {
+  padding: 3rem 0 2rem;
+  text-align: center;
+}
+
+.page-header h1 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.page-content {
+  padding-bottom: 3rem;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.page-content p {
+  margin-bottom: 1rem;
+  color: var(--text-secondary);
+}
+
+/* Blog */
+.blog-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.blog-item {
+  display: block;
+  padding: 1rem 1.25rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  transition: all 0.2s;
+}
+
+.blog-item:hover {
+  border-color: var(--accent-blue);
+}
+
+.blog-item h3 {
+  font-size: 1rem;
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+}
+
+.blog-item time {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+/* Blog post single */
+.blog-post {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+}
+
+.blog-post h1 {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.blog-post .meta {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
+}
+
+.blog-post-content {
+  color: var(--text-secondary);
+}
+
+.blog-post-content h2 { font-size: 1.2rem; margin: 1.5rem 0 0.5rem; }
+.blog-post-content h3 { font-size: 1.1rem; margin: 1.25rem 0 0.5rem; }
+.blog-post-content p { margin-bottom: 1rem; }
+.blog-post-content ul, .blog-post-content ol { margin: 0 0 1rem 1.5rem; }
+.blog-post-content code {
+  background: rgba(0,0,0,0.3);
+  padding: 0.15rem 0.4rem;
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+}
+
+/* Now page */
+.now-list {
+  list-style: none;
+}
+
+.now-list li {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.now-list li:last-child {
+  border-bottom: none;
+}
+
+.now-list .label {
+  min-width: 100px;
+  color: var(--accent-cyan);
+  font-weight: 500;
+}
+
+/* ========================================
+   Footer
+   ======================================== */
+footer {
+  padding: 2rem 1.5rem;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+/* ========================================
+   Responsive
+   ======================================== */
+@media (max-width: 640px) {
+  .hero {
+    padding: 2rem 0 2rem;
+  }
+
+  .hero-terminal-body {
+    font-size: 0.8rem;
+  }
+
+  .links-grid {
+    grid-template-columns: repeat(2, 1fr);
+    max-width: 100%;
+  }
+
+  .nav-inner {
+    gap: 0.25rem;
+  }
+
+  .nav-link {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.9rem;
+  }
+
+  .git-commit {
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+}

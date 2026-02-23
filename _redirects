@@ -1,0 +1,2 @@
+# Cloudflare Pages - SPA-style routing for blog posts
+/blog/*  /blog/post.html  200
