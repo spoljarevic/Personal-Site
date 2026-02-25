@@ -48,3 +48,4 @@ const CONFIG = {
     { href: 'https://techhub.social/@spoljarevic', label: 'TechHub (Mastodon)', icon: '🐘' },
   ],
 };
+

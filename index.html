@@ -10,9 +10,16 @@
   <nav class="navbar">
     <div class="nav-inner">
       <a href="index.html" class="nav-link">Home</a>
-      <a href="blog.html" class="nav-link" target="_blank" rel="noopener">Blog</a>
-      <a href="about.html" class="nav-link">About</a>
-      <a href="now.html" class="nav-link">Now</a>
+      <div class="nav-item" data-dropdown>
+        <a href="html/blog/blog.html" class="nav-link">Blog</a>
+        <div class="nav-dropdown">
+          <a href="html/blog/blog.html">View it here</a>
+          <a href="https://codeberg.org/Spoljarevic/Blog" target="_blank" rel="noopener">View it on Codeberg</a>
+        </div>
+      </div>
+      <a href="html/about.html" class="nav-link">About</a>
+      <a href="html/skills.html" class="nav-link">Skills</a>
+      <a href="html/now.html" class="nav-link">Now</a>
     </div>
   </nav>
 
@@ -96,14 +103,14 @@
   <footer>
     <p>© 2026 Luca Matteo Špoljarević · <a href="https://codeberg.org/Spoljarevic">Codeberg</a></p>
     <nav class="footer-legal" aria-label="Legal">
-      <a href="legal/impressum.html">Impressum</a>
-      <a href="legal/privacy.html">Privacy</a>
-      <a href="legal/cookies.html">Cookies</a>
-      <a href="legal/terms.html">Terms</a>
+      <a href="html/legal/impressum.html">Impressum</a>
+      <a href="html/legal/privacy.html">Privacy</a>
+      <a href="html/legal/cookies.html">Cookies</a>
+      <a href="html/legal/terms.html">Terms</a>
     </nav>
   </footer>
 
-  <script src="config.js"></script>
+  <script src="js/config.js"></script>
   <script src="js/main.js"></script>
 </body>
 </html>

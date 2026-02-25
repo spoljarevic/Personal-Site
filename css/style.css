@@ -440,7 +440,7 @@ main {
 }
 
 /* ========================================
-   Page layouts (About, Blog, Now)
+   Page layouts (About, Blog, Now, Skills)
    ======================================== */
 .page-header {
   padding: 3rem 0 2rem;
@@ -461,6 +461,71 @@ main {
 .page-content p {
   margin-bottom: 1rem;
   color: var(--text-secondary);
+}
+
+/* Skills */
+.skills-grid {
+  display: grid;
+  gap: 1rem;
+  margin-top: 0.75rem;
+}
+
+@media (min-width: 768px) {
+  .skills-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.skill-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+}
+
+.skill-card h3 {
+  font-size: 1rem;
+  margin-bottom: 0.4rem;
+}
+
+.skill-card p {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+}
+
+.skill-block {
+  margin-top: 1.25rem;
+  padding: 1.25rem 1.5rem;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  position: relative;
+}
+
+.skill-block h3 {
+  font-size: 1.05rem;
+  margin-bottom: 0.4rem;
+}
+
+.skill-block p {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.5rem;
+}
+
+.skill-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.skill-chip {
+  font-size: 0.8rem;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  background: rgba(15, 22, 41, 0.8);
 }
 
 /* Blog */

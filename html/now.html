@@ -4,14 +4,21 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Now | Luca Matteo Špoljarević</title>
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="../css/style.css">
 </head>
 <body data-page="now">
   <nav class="navbar">
     <div class="nav-inner">
-      <a href="index.html" class="nav-link">Home</a>
-      <a href="https://codeberg.org/Spoljarevic/Blog" class="nav-link" target="_blank" rel="noopener">Blog</a>
+      <a href="../index.html" class="nav-link">Home</a>
+      <div class="nav-item" data-dropdown>
+        <a href="blog/blog.html" class="nav-link">Blog</a>
+        <div class="nav-dropdown">
+          <a href="blog/blog.html">View it here</a>
+          <a href="https://codeberg.org/Spoljarevic/Blog" target="_blank" rel="noopener">View it on Codeberg</a>
+        </div>
+      </div>
       <a href="about.html" class="nav-link">About</a>
+      <a href="skills.html" class="nav-link">Skills</a>
       <a href="now.html" class="nav-link">Now</a>
     </div>
   </nav>
@@ -42,7 +49,10 @@
           </li>
           <li>
             <span class="label">Side projects</span>
-            <span>My Goal for Februrary is writing documentation for my Repos and for March a complete overhaul of my archinstall playbook (post-install)</span>
+            <span>
+              My goal for February is writing documentation for my repos and for March
+              a complete overhaul of my archinstall playbook (post-install).
+            </span>
           </li>
         </ul>
       </div>
@@ -59,7 +69,8 @@
     </nav>
   </footer>
 
-  <script src="config.js"></script>
-  <script src="js/main.js"></script>
+  <script src="../js/config.js"></script>
+  <script src="../js/main.js"></script>
 </body>
 </html>
+
