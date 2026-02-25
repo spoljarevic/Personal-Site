@@ -5,4 +5,4 @@ The initial site was pretty much just vibe coded, but I did change a lot of thin
 
 ## LICENSE ##
 This Repository uses the MIT License.
-To view the License in this project and learn more about it, please click [here](https://codeberg.org/Spoljarevic/Personal-Site/src/branch/master/LICENSE).
+To view the License in this project and learn more about it, please click [here](https://codeberg.org/Spoljarevic/Personal-Site/src/branch/master/licence/LICENSE.MIT).
