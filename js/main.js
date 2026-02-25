@@ -109,7 +109,6 @@ async function loadProjects() {
 
     const html = data
       .filter(r => !r.archived)
-      .slice(0, 12)
       .map(
         r =>
           `<div class="project-card">
