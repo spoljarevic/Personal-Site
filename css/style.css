@@ -463,6 +463,82 @@ main {
   color: var(--text-secondary);
 }
 
+/* Chess page */
+.container--wide {
+  max-width: 1700px;
+}
+
+.chess-hero {
+  text-align: center;
+  padding: 2rem 0 2.5rem;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 2rem;
+}
+
+.chess-hero h1 {
+  font-size: 1.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.chess-hero p {
+  color: var(--text-secondary);
+  margin-bottom: 1.25rem;
+}
+
+.chess-study-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--accent-cyan);
+  font-weight: 500;
+  transition: border-color 0.2s, background 0.2s, color 0.2s;
+}
+
+.chess-study-cta:hover {
+  border-color: var(--accent-blue);
+  background: rgba(59, 130, 246, 0.08);
+  color: var(--accent-blue);
+}
+
+.chess-games-section h2 {
+  font-size: 1.25rem;
+  color: var(--text-secondary);
+  margin-bottom: 1.25rem;
+  font-weight: 500;
+}
+
+.chess-games-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+@media (min-width: 880px) {
+  .chess-games-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.chess-game-wrap {
+  position: relative;
+  width: 100%;
+  border-radius: 8px;
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+}
+
+.chess-game-wrap iframe {
+  display: block;
+  width: 800px;
+  height: 371px;
+  border: 0;
+}
+
 /* Skills */
 .skills-grid {
   display: grid;
