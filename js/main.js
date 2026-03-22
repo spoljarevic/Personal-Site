@@ -30,6 +30,7 @@ function initNavbar() {
   const links = nav.querySelectorAll('.nav-link[href]');
   const currentPath = window.location.pathname.replace(/\/$/, '') || '/';
   links.forEach(link => {
+    if (link.closest('.nav-item[data-dropdown]')) return;
     const href = new URL(link.href).pathname.replace(/\/$/, '') || '/';
     if (currentPath === href || (currentPath.startsWith('/blog/') && href === '/blog')) {
       link.classList.add('active');
@@ -44,10 +45,8 @@ function initDropdowns() {
     if (!link) return;
 
     link.addEventListener('click', (e) => {
-      if (window.innerWidth < 768) {
-        return; // Allow default on mobile
-      }
       e.preventDefault();
+      e.stopPropagation();
       const isOpen = item.classList.contains('open');
       navItems.forEach(i => i.classList.remove('open'));
       if (!isOpen) item.classList.add('open');
