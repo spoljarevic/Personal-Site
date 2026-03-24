@@ -1094,7 +1094,6 @@ body[data-page="blog-post"] .blog-post h1::before {
 .projects-tty-frame {
   background: var(--bg-card);
   border: 1px solid var(--border);
-  overflow-x: auto;
   font-family: var(--font-mono);
   line-height: 1.45;
 }
@@ -1107,7 +1106,7 @@ body[data-page="blog-post"] .blog-post h1::before {
   line-height: 1.2;
   color: var(--accent-cyan);
   white-space: pre;
-  overflow-x: auto;
+  overflow-x: hidden;
   background: rgba(0, 0, 0, 0.28);
   border: none;
   border-bottom: 1px solid var(--border);
@@ -1124,7 +1123,6 @@ body[data-page="blog-post"] .blog-post h1::before {
 
 .projects-terminal-table {
   width: 100%;
-  min-width: 36rem;
   border-collapse: collapse;
   font-size: 0.8125rem;
   background: var(--bg-card);
