@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (document.body.dataset.page === 'index') {
     loadProjects();
     loadGitActivity();
+    initFastfetchArt();
   }
 
   if (document.body.dataset.page === 'blog') {
@@ -58,6 +59,29 @@ function initDropdowns() {
       navItems.forEach(i => i.classList.remove('open'));
     }
   });
+}
+
+function initFastfetchArt() {
+  const pre = document.getElementById('fastfetch-art');
+  if (!pre) return;
+
+  const embedded = document.getElementById('fastfetch-ascii-src');
+  if (embedded) {
+    // Read from the DocumentFragment, not textContent
+    const text = embedded.innerHTML;
+    if (text.trim()) {
+      pre.textContent = text.replace(/\r\n/g, '\n');
+      return;
+    }
+  }
+
+  const url = new URL('images/ascii/ls-pipe.txt', window.location.href);
+  fetch(url, { cache: 'force-cache' })
+    .then(r => (r.ok ? r.text() : Promise.reject()))
+    .then(text => {
+      pre.textContent = text.replace(/\r\n/g, '\n');
+    })
+    .catch(() => { /* keep placeholder */ });
 }
 
 function initScrollHideNavbar() {
