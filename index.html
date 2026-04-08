@@ -215,5 +215,21 @@
                                                                  :::..                              </template>
   <script src="js/config.js"></script>
   <script src="js/main.js"></script>
+
+  <button class="open-zammad-chat">Chat with us</button>
+
+  <script src="https://tickets.spoljarevic.sh/assets/chat/chat-no-jquery.min.js"></script>
+  <script>
+  (function() {
+    new ZammadChat({
+      title: 'Support',
+      background: 'rgb(21,29,46)',
+      fontSize: '12px',
+      flat: true,
+      chatId: 1,
+      show: false
+    });
+  })();
+  </script>
 </body>
 </html>
