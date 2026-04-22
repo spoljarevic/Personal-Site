@@ -1,14 +1,14 @@
 /* ========================================
    Spoljarevic Personal Site
-   Terminal / shell UI — same palette as before
+   Terminal / shell UI — modernised
    ======================================== */
 
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap');
 
 :root {
-  --bg-dark: #0a0e1a;
-  --bg-mid: #0f1629;
-  --bg-card: #151d2e;
+  --bg-dark: #080c18;
+  --bg-mid: #0d1428;
+  --bg-card: #111827;
   --accent-blue: #3b82f6;
   --accent-cyan: #22d3ee;
   --accent-purple: #8b5cf6;
@@ -16,12 +16,18 @@
   --text-secondary: #94a3b8;
   --text-muted: #64748b;
   --border: rgba(59, 130, 246, 0.2);
+  --border-hover: rgba(139, 92, 246, 0.5);
+  --glow-blue: 0 0 24px rgba(59, 130, 246, 0.28);
+  --glow-cyan: 0 0 24px rgba(34, 211, 238, 0.28);
+  --glow-purple: 0 0 24px rgba(139, 92, 246, 0.28);
+  --gradient-accent: linear-gradient(120deg, var(--accent-cyan), var(--accent-purple));
   --gradient-1: linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #0f1629 100%);
   --gradient-2: linear-gradient(180deg, transparent 0%, var(--bg-dark) 100%);
-  --shadow-glow: 0 0 0 1px var(--border);
+  --shadow-glow: 0 0 0 1px var(--border), 0 8px 32px rgba(59, 130, 246, 0.1);
   --font-sans: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
   --font-mono: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
-  --terminal-radius: 0;
+  --terminal-radius: 8px;
+  --card-radius: 12px;
   --terminal-pad: 0.65rem 0.85rem;
 }
 
@@ -46,35 +52,35 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Flat “screen” with a faint grid (same hue family as borders) */
+/* Clean radial glow — no grid */
 body::before {
   content: '';
   position: fixed;
   inset: 0;
   z-index: -2;
   pointer-events: none;
-  background-color: var(--bg-dark);
-  background-image:
-    linear-gradient(rgba(59, 130, 246, 0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(59, 130, 246, 0.025) 1px, transparent 1px);
-  background-size: 100% 1.5rem, 0.6rem 100%;
+  background:
+    radial-gradient(ellipse 70% 45% at 50% 0%, rgba(59, 130, 246, 0.12) 0%, transparent 65%),
+    radial-gradient(ellipse 40% 30% at 80% 80%, rgba(139, 92, 246, 0.07) 0%, transparent 60%),
+    var(--bg-dark);
 }
 
 body::after {
-  content: '';
+  display: none;
+}
+
+/* Particle canvas */
+#particle-canvas {
   position: fixed;
   inset: 0;
-  z-index: -1;
+  width: 100%;
+  height: 100%;
+  z-index: -3;
   pointer-events: none;
-  background: linear-gradient(
-    180deg,
-    rgba(59, 130, 246, 0.06) 0%,
-    transparent 28%
-  );
 }
 
 ::selection {
-  background: rgba(59, 130, 246, 0.35);
+  background: rgba(139, 92, 246, 0.4);
   color: var(--text-primary);
 }
 
@@ -103,6 +109,20 @@ img {
 }
 
 /* ========================================
+   Fade-in scroll animations
+   ======================================== */
+.fade-in {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.fade-in.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ========================================
    Navbar — shell command bar
    ======================================== */
 .navbar {
@@ -116,9 +136,11 @@ img {
   justify-content: center;
   align-items: center;
   font-family: var(--font-mono);
-  background: var(--bg-mid);
+  background: rgba(8, 12, 24, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border-bottom: 1px solid var(--border);
-  box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.4);
+  box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.4), 0 4px 24px rgba(0, 0, 0, 0.2);
   transition: transform 0.25s ease, opacity 0.25s ease;
 }
 
@@ -204,13 +226,15 @@ img {
   left: 50%;
   transform: translateX(-50%) translateY(6px);
   min-width: 200px;
-  background: var(--bg-card);
+  background: rgba(13, 20, 40, 0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--border);
   border-radius: var(--terminal-radius);
   padding: 0.35rem 0;
   opacity: 0;
   visibility: hidden;
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.45);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.55), var(--glow-blue);
   transition: opacity 0.15s ease, transform 0.15s ease, visibility 0.15s;
 }
 
@@ -265,14 +289,28 @@ main {
 }
 
 .hero-terminal {
-  background: var(--bg-card);
+  background: rgba(17, 24, 39, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border: 1px solid var(--border);
   border-radius: var(--terminal-radius);
   overflow-x: auto;
   overflow-y: visible;
-  box-shadow: var(--shadow-glow);
+  box-shadow:
+    0 0 0 1px var(--border),
+    0 20px 60px rgba(59, 130, 246, 0.15),
+    0 4px 16px rgba(0, 0, 0, 0.4);
   max-width: 100%;
   margin: 0 0 1.75rem;
+  transition: box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.hero-terminal:hover {
+  border-color: rgba(59, 130, 246, 0.4);
+  box-shadow:
+    0 0 0 1px rgba(59, 130, 246, 0.4),
+    0 24px 72px rgba(59, 130, 246, 0.2),
+    0 4px 16px rgba(0, 0, 0, 0.4);
 }
 
 .terminal-header {
@@ -300,9 +338,9 @@ main {
   border-radius: 50%;
 }
 
-.terminal-dot:nth-child(1) { background: #ef4444; }
-.terminal-dot:nth-child(2) { background: #eab308; }
-.terminal-dot:nth-child(3) { background: #22c55e; }
+.terminal-dot:nth-child(1) { background: #ef4444; box-shadow: 0 0 6px rgba(239,68,68,0.5); }
+.terminal-dot:nth-child(2) { background: #eab308; box-shadow: 0 0 6px rgba(234,179,8,0.5); }
+.terminal-dot:nth-child(3) { background: #22c55e; box-shadow: 0 0 6px rgba(34,197,94,0.5); }
 
 .terminal-body {
   padding: 1rem 1.1rem;
@@ -353,10 +391,22 @@ main {
   margin-left: 1px;
   vertical-align: text-bottom;
   animation: blink 1s step-end infinite;
+  box-shadow: 0 0 8px rgba(34, 211, 238, 0.6);
 }
 
 @keyframes blink {
   50% { opacity: 0; }
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .terminal-line--fastfetch {
@@ -387,6 +437,7 @@ main {
   flex: 0 0 auto;
   order: 1;
   min-width: 0;
+  filter: drop-shadow(0 0 6px rgba(34, 211, 238, 0.3));
 }
 
 .fastfetch-dl {
@@ -439,7 +490,13 @@ main {
   object-fit: cover;
   border: 1px solid var(--border);
   margin: 0 0 1rem;
-  box-shadow: var(--shadow-glow);
+  box-shadow: var(--shadow-glow), 0 0 24px rgba(34, 211, 238, 0.1);
+  transition: box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.hero-avatar:hover {
+  border-color: rgba(34, 211, 238, 0.5);
+  box-shadow: 0 0 0 1px rgba(34, 211, 238, 0.4), 0 0 32px rgba(34, 211, 238, 0.2);
 }
 
 .hero h1 {
@@ -447,10 +504,17 @@ main {
   font-weight: 600;
   margin-bottom: 0.35rem;
   letter-spacing: -0.02em;
+  background: var(--gradient-accent);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
 }
 
 .hero h1::before {
   content: 'whoami → ';
+  background: none;
+  -webkit-text-fill-color: var(--accent-purple);
   color: var(--accent-purple);
   font-weight: 500;
 }
@@ -468,7 +532,7 @@ main {
 }
 
 /* ========================================
-   Links grid — “menu” entries
+   Links grid — "menu" entries
    ======================================== */
 .links-grid {
   display: grid;
@@ -483,20 +547,22 @@ main {
   align-items: center;
   gap: 0.5rem;
   padding: 0.65rem 0.85rem;
-  background: var(--bg-card);
+  background: rgba(17, 24, 39, 0.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   border: 1px solid var(--border);
   border-radius: var(--terminal-radius);
-  transition: border-color 0.15s ease, background 0.15s ease;
+  transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
   color: var(--text-primary);
   text-decoration: none;
 }
 
 .link-card:hover {
-  border-color: var(--accent-blue);
-  background: rgba(59, 130, 246, 0.08);
+  border-color: var(--border-hover);
+  background: rgba(139, 92, 246, 0.08);
   text-decoration: none;
-  transform: none;
-  box-shadow: var(--shadow-glow);
+  transform: translateY(-2px);
+  box-shadow: var(--glow-purple), 0 4px 16px rgba(0, 0, 0, 0.3);
 }
 
 .link-card .icon {
@@ -539,7 +605,7 @@ main {
   font-weight: 500;
 }
 
-/* Index: each section gets its own “command” */
+/* Index: each section gets its own "command" */
 body[data-page="index"] .container > section.section:nth-of-type(1) .section-title::before {
   content: '$ git log --oneline · ';
   color: var(--accent-cyan);
@@ -573,16 +639,20 @@ body[data-page="skills"] .page-content > section.section:nth-of-type(2) .section
 }
 
 .project-card {
-  background: var(--bg-card);
+  background: rgba(17, 24, 39, 0.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   border: 1px solid var(--border);
   border-radius: var(--terminal-radius);
   padding: 0.85rem 1rem;
-  transition: border-color 0.15s ease, background 0.15s ease;
+  transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
 }
 
 .project-card:hover {
-  border-color: var(--accent-blue);
-  box-shadow: var(--shadow-glow);
+  border-color: var(--border-hover);
+  box-shadow: var(--glow-purple), 0 4px 16px rgba(0, 0, 0, 0.3);
+  transform: translateY(-2px);
+  background: rgba(139, 92, 246, 0.06);
 }
 
 .project-card a {
@@ -606,14 +676,23 @@ body[data-page="skills"] .page-content > section.section:nth-of-type(2) .section
   border: 1px dashed var(--border);
   color: var(--text-secondary);
   font-size: 0.875rem;
+  border-radius: var(--terminal-radius);
 }
 
 /* Git Activity */
 .git-activity {
-  background: var(--bg-card);
+  background: rgba(17, 24, 39, 0.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   border: 1px solid var(--border);
   border-radius: var(--terminal-radius);
   overflow: hidden;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.git-activity:hover {
+  border-color: rgba(34, 211, 238, 0.35);
+  box-shadow: var(--glow-cyan), 0 4px 16px rgba(0, 0, 0, 0.3);
 }
 
 .git-branch-tabs {
@@ -656,6 +735,11 @@ body[data-page="skills"] .page-content > section.section:nth-of-type(2) .section
   gap: 1rem;
   padding: 0.65rem 0.85rem;
   border-bottom: 1px solid var(--border);
+  transition: background 0.15s ease;
+}
+
+.git-commit:hover {
+  background: rgba(59, 130, 246, 0.05);
 }
 
 .git-commit:last-child {
@@ -709,12 +793,19 @@ body[data-page="skills"] .page-content > section.section:nth-of-type(2) .section
   font-size: 1.35rem;
   margin-bottom: 0.35rem;
   font-weight: 600;
+  background: var(--gradient-accent);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
 }
 
 .page-header h1::before {
   content: '$ bat --plain ';
+  -webkit-text-fill-color: var(--accent-cyan);
   color: var(--accent-cyan);
   font-weight: 500;
+  background: none;
 }
 
 body[data-page="about"] .page-header h1::before {
@@ -759,11 +850,18 @@ body[data-page="skills"] .page-header h1::before {
 .chess-hero h1 {
   font-size: 1.25rem;
   margin-bottom: 0.5rem;
+  background: var(--gradient-accent);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
 }
 
 .chess-hero h1::before {
   content: '♔ lichess/study » ';
+  -webkit-text-fill-color: var(--accent-cyan);
   color: var(--accent-cyan);
+  background: none;
 }
 
 .chess-hero p {
@@ -776,20 +874,24 @@ body[data-page="skills"] .page-header h1::before {
   align-items: center;
   gap: 0.5rem;
   padding: 0.55rem 1rem;
-  background: var(--bg-card);
+  background: rgba(17, 24, 39, 0.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   border: 1px solid var(--border);
   border-radius: var(--terminal-radius);
   color: var(--accent-cyan);
   font-weight: 500;
   font-size: 0.875rem;
-  transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
+  transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
 }
 
 .chess-study-cta:hover {
-  border-color: var(--accent-blue);
-  background: rgba(59, 130, 246, 0.1);
-  color: var(--accent-blue);
+  border-color: var(--border-hover);
+  background: rgba(139, 92, 246, 0.1);
+  color: var(--accent-purple);
   text-decoration: none;
+  transform: translateY(-2px);
+  box-shadow: var(--glow-purple);
 }
 
 .chess-games-section h2 {
@@ -822,7 +924,13 @@ body[data-page="skills"] .page-header h1::before {
   border-radius: var(--terminal-radius);
   overflow-x: auto;
   border: 1px solid var(--border);
-  background: var(--bg-card);
+  background: rgba(17, 24, 39, 0.7);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.chess-game-wrap:hover {
+  border-color: rgba(34, 211, 238, 0.35);
+  box-shadow: var(--glow-cyan);
 }
 
 .chess-game-wrap iframe {
@@ -846,10 +954,19 @@ body[data-page="skills"] .page-header h1::before {
 }
 
 .skill-card {
-  background: var(--bg-card);
+  background: rgba(17, 24, 39, 0.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   border: 1px solid var(--border);
   border-radius: var(--terminal-radius);
   padding: 0.85rem 1rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.skill-card:hover {
+  border-color: var(--border-hover);
+  box-shadow: var(--glow-purple);
+  transform: translateY(-2px);
 }
 
 .skill-card h3 {
@@ -872,8 +989,17 @@ body[data-page="skills"] .page-header h1::before {
   padding: 1rem 1.1rem;
   border-radius: var(--terminal-radius);
   border: 1px solid var(--border);
-  background: var(--bg-card);
+  background: rgba(17, 24, 39, 0.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   position: relative;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.skill-block:hover {
+  border-color: var(--border-hover);
+  box-shadow: var(--glow-purple);
+  transform: translateY(-2px);
 }
 
 .skill-block h3 {
@@ -906,6 +1032,12 @@ body[data-page="skills"] .page-header h1::before {
   border: 1px solid var(--border);
   color: var(--text-secondary);
   background: rgba(10, 14, 26, 0.85);
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.skill-chip:hover {
+  border-color: rgba(34, 211, 238, 0.4);
+  color: var(--accent-cyan);
 }
 
 .skill-chip::before {
@@ -930,15 +1062,20 @@ body[data-page="skills"] .page-header h1::before {
 .blog-item {
   display: block;
   padding: 0.85rem 1rem;
-  background: var(--bg-card);
+  background: rgba(17, 24, 39, 0.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   border: 1px solid var(--border);
   border-radius: var(--terminal-radius);
-  transition: border-color 0.15s ease;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease, background 0.2s ease;
 }
 
 .blog-item:hover {
-  border-color: var(--accent-blue);
+  border-color: var(--border-hover);
   text-decoration: none;
+  transform: translateY(-2px);
+  box-shadow: var(--glow-purple), 0 4px 16px rgba(0, 0, 0, 0.3);
+  background: rgba(139, 92, 246, 0.06);
 }
 
 .blog-item h3 {
@@ -958,11 +1095,14 @@ body[data-page="skills"] .page-header h1::before {
 }
 
 .blog-post {
-  background: var(--bg-card);
+  background: rgba(17, 24, 39, 0.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   border: 1px solid var(--border);
   border-radius: var(--terminal-radius);
   padding: 1.5rem 1.25rem;
   margin-bottom: 1.5rem;
+  box-shadow: var(--shadow-glow);
 }
 
 .blog-post h1 {
@@ -1019,9 +1159,17 @@ body[data-page="blog-post"] .blog-post h1::before {
 .now-list {
   list-style: none;
   border: 1px solid var(--border);
-  background: var(--bg-card);
+  background: rgba(17, 24, 39, 0.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   border-radius: var(--terminal-radius);
   overflow: hidden;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.now-list:hover {
+  border-color: rgba(34, 211, 238, 0.35);
+  box-shadow: var(--glow-cyan);
 }
 
 .now-list li {
@@ -1030,6 +1178,11 @@ body[data-page="blog-post"] .blog-post h1::before {
   display: flex;
   gap: 1rem;
   align-items: flex-start;
+  transition: background 0.15s ease;
+}
+
+.now-list li:hover {
+  background: rgba(59, 130, 246, 0.05);
 }
 
 .now-list li:last-child {
@@ -1092,10 +1245,20 @@ body[data-page="blog-post"] .blog-post h1::before {
 }
 
 .projects-tty-frame {
-  background: var(--bg-card);
+  background: rgba(17, 24, 39, 0.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   border: 1px solid var(--border);
   font-family: var(--font-mono);
   line-height: 1.45;
+  border-radius: var(--terminal-radius);
+  overflow: hidden;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.projects-tty-frame:hover {
+  border-color: rgba(34, 211, 238, 0.35);
+  box-shadow: var(--glow-cyan);
 }
 
 .projects-tty-ruler {
@@ -1125,7 +1288,7 @@ body[data-page="blog-post"] .blog-post h1::before {
   width: 100%;
   border-collapse: collapse;
   font-size: 0.8125rem;
-  background: var(--bg-card);
+  background: transparent;
 }
 
 .projects-terminal-table thead th {
@@ -1145,8 +1308,12 @@ body[data-page="blog-post"] .blog-post h1::before {
   vertical-align: top;
 }
 
+.projects-terminal-table tbody tr {
+  transition: background 0.15s ease;
+}
+
 .projects-terminal-table tbody tr:hover td {
-  background: rgba(59, 130, 246, 0.05);
+  background: rgba(59, 130, 246, 0.07);
 }
 
 .projects-col-month {
@@ -1237,6 +1404,8 @@ footer {
   border-top: 1px solid var(--border);
   margin-top: 1rem;
   background: rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 
 footer p + nav,
@@ -1269,10 +1438,13 @@ footer p + nav,
 .legal-article {
   max-width: 65ch;
   margin: 0 auto;
-  background: var(--bg-card);
+  background: rgba(17, 24, 39, 0.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   border: 1px solid var(--border);
   border-radius: var(--terminal-radius);
   padding: 1.5rem 1.25rem;
+  box-shadow: var(--shadow-glow);
 }
 
 .legal-title {
@@ -1365,4 +1537,25 @@ footer p + nav,
     flex-direction: column;
     gap: 0.2rem;
   }
+}
+
+/* ========================================
+   Scrollbar
+   ======================================== */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-dark);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(59, 130, 246, 0.3);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(59, 130, 246, 0.5);
 }

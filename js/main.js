@@ -7,12 +7,19 @@ document.addEventListener('DOMContentLoaded', () => {
   initNavbar();
   initDropdowns();
   initScrollHideNavbar();
+  initParticles();
+  initScrollAnimations();
 
   // Only load dynamic content on index page
   if (document.body.dataset.page === 'index') {
-    loadProjects();
+    initTerminalTyping();
     loadGitActivity();
     initFastfetchArt();
+  }
+
+  if (document.body.dataset.page === 'git') {
+    loadProjects();
+    loadGitActivity();
   }
 
   if (document.body.dataset.page === 'blog') {
@@ -275,6 +282,175 @@ async function loadBlogPost() {
   } catch (e) {
     container.innerHTML = '<p>Could not load post. raw.codeberg.org may be unavailable.</p>';
   }
+}
+
+// ========== Terminal Typing Animation ==========
+
+async function initTerminalTyping() {
+  const ids = ['tl-whoami', 'tl-whoami-out', 'tl-fastfetch', 'tl-fastfetch-out', 'tl-cattitle', 'tl-cattitle-out', 'tl-cursor'];
+  const els = {};
+  for (const id of ids) {
+    const el = document.getElementById(id);
+    if (!el) return; // bail if HTML doesn't have the expected IDs
+    els[id] = el;
+    el.style.visibility = 'hidden';
+  }
+
+  const delay = ms => new Promise(r => setTimeout(r, ms));
+  const CHAR_SPEED = 55;
+  const JITTER = 35;
+
+  async function typeCommand(lineEl, text) {
+    const cmdSpan = lineEl.querySelector('.command');
+    lineEl.style.visibility = 'visible';
+    cmdSpan.innerHTML = '<span class="terminal-cursor"></span>';
+    await delay(150);
+    let typed = '';
+    for (const char of text) {
+      typed += char;
+      cmdSpan.innerHTML = escapeHtml(typed) + '<span class="terminal-cursor"></span>';
+      await delay(CHAR_SPEED + Math.random() * JITTER);
+    }
+    // Remove inline cursor — final prompt cursor line takes over
+    cmdSpan.textContent = typed;
+    await delay(220);
+  }
+
+  async function showOutput(lineEl) {
+    lineEl.style.visibility = 'visible';
+    await delay(100);
+  }
+
+  // Reduced-motion: just reveal everything instantly
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    ids.forEach(id => (els[id].style.visibility = 'visible'));
+    return;
+  }
+
+  await delay(350);
+
+  await typeCommand(els['tl-whoami'], 'whoami');
+  await showOutput(els['tl-whoami-out']);
+  await delay(280);
+
+  await typeCommand(els['tl-fastfetch'], 'fastfetch');
+  await showOutput(els['tl-fastfetch-out']);
+  await delay(280);
+
+  await typeCommand(els['tl-cattitle'], 'cat ~/.title');
+  await showOutput(els['tl-cattitle-out']);
+  await delay(180);
+
+  els['tl-cursor'].style.visibility = 'visible';
+}
+
+// ========== Particles ==========
+
+function initParticles() {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  const canvas = document.createElement('canvas');
+  canvas.id = 'particle-canvas';
+  document.body.prepend(canvas);
+
+  const ctx = canvas.getContext('2d');
+  const COLORS = [
+    [34, 211, 238],   // cyan
+    [59, 130, 246],   // blue
+    [139, 92, 246],   // purple
+  ];
+
+  let particles = [];
+  let rafId = null;
+  let running = true;
+
+  function createParticles() {
+    particles = [];
+    const count = Math.min(35, Math.floor((canvas.width + canvas.height) / 50));
+    for (let i = 0; i < count; i++) {
+      const color = COLORS[Math.floor(Math.random() * COLORS.length)];
+      particles.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        r: Math.random() * 1.2 + 0.3,
+        alpha: Math.random() * 0.15 + 0.04,
+        vx: (Math.random() - 0.5) * 0.15,
+        vy: (Math.random() - 0.5) * 0.15,
+        color,
+      });
+    }
+  }
+
+  function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    createParticles();
+  }
+
+  function draw() {
+    if (!running) return;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.globalCompositeOperation = 'lighter';
+
+    for (const p of particles) {
+      const [r, g, b] = p.color;
+      const grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r * 7);
+      grad.addColorStop(0, `rgba(${r},${g},${b},${p.alpha})`);
+      grad.addColorStop(0.5, `rgba(${r},${g},${b},${p.alpha * 0.5})`);
+      grad.addColorStop(1, `rgba(${r},${g},${b},0)`);
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r * 7, 0, Math.PI * 2);
+      ctx.fillStyle = grad;
+      ctx.fill();
+
+      p.x += p.vx;
+      p.y += p.vy;
+      if (p.x < 0) p.x = canvas.width;
+      if (p.x > canvas.width) p.x = 0;
+      if (p.y < 0) p.y = canvas.height;
+      if (p.y > canvas.height) p.y = 0;
+    }
+
+    rafId = requestAnimationFrame(draw);
+  }
+
+  resize();
+  window.addEventListener('resize', resize);
+  draw();
+
+  window.matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', (e) => {
+    if (e.matches && running) {
+      running = false;
+      cancelAnimationFrame(rafId);
+      canvas.remove();
+    }
+  });
+}
+
+// ========== Scroll Animations ==========
+
+function initScrollAnimations() {
+  const elements = document.querySelectorAll('.fade-in');
+  if (!elements.length) return;
+
+  if (!('IntersectionObserver' in window)) {
+    elements.forEach(el => el.classList.add('visible'));
+    return;
+  }
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.15 }
+  );
+
+  elements.forEach(el => observer.observe(el));
 }
 
 function escapeHtml(str) {
